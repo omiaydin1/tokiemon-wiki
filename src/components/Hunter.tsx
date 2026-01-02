@@ -179,7 +179,7 @@ export default function Hunter() {
                     )}
                     {community.hunting.only && (
                       <div className="px-2 py-0.5 rounded text-[10px] bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                        Hunter
+                        Only Hunter
                       </div>
                     )}
                   </div>
