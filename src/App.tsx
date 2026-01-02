@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ExternalLink, Sword, Ghost, Wallet, Skull, Menu, X, ChevronDown, FileText } from "lucide-react";
+import { ExternalLink, Sword, Ghost, Wallet, Skull, ChevronDown, FileText, Target } from "lucide-react";
 import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Market } from "./components/Market";
@@ -11,12 +11,13 @@ import { ChainGuard } from "./components/ChainGuard";
 import { BlackMarketContent } from "./components/BlackMarketContent";
 import ItemPage from "./components/ItemPage";
 import Changelog from "./components/Changelog";
+import Hunter from "./components/Hunter";
 
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeSection, setActiveSection] = useState<
-    "items" | "monsters" | "market" | "black-market" | "changelog"
+    "items" | "monsters" | "market" | "black-market" | "changelog" | "hunter"
   >("items");
   const [items, setItems] = useState<Item[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +40,7 @@ export default function App() {
 
   useEffect(() => {
     const path = location.pathname.slice(1) || "items";
-    setActiveSection(path as "items" | "monsters" | "market" | "black-market" | "changelog");
+    setActiveSection(path as "items" | "monsters" | "market" | "black-market" | "changelog" | "hunter");
   }, [location]);
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export default function App() {
     fetchCommunities();
   }, [location.pathname, activeSection]);
 
-  const handleNavigation = (section: "items" | "monsters" | "market" | "black-market" | "changelog") => {
+  const handleNavigation = (section: "items" | "monsters" | "market" | "black-market" | "changelog" | "hunter") => {
     setActiveSection(section);
     navigate(`/${section}`);
   };
@@ -138,6 +139,7 @@ export default function App() {
                     {activeSection === "market" && <Wallet className="w-3.5 h-3.5" />}
                     {activeSection === "black-market" && <Skull className="w-3.5 h-3.5" />}
                     {activeSection === "changelog" && <FileText className="w-3.5 h-3.5" />}
+                    {activeSection === "hunter" && <Target className="w-3.5 h-3.5" />}
                     <span className="capitalize">{activeSection.replace("-", " ")}</span>
                     {(activeSection === "market" || activeSection === "black-market") && (
                       <span
@@ -227,6 +229,20 @@ export default function App() {
                     <FileText className="w-3.5 h-3.5" />
                     <span>Changelog</span>
                   </button>
+                  <button
+                    onClick={() => {
+                      handleNavigation("hunter");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                      activeSection === "hunter"
+                        ? "bg-slate-700 text-white"
+                        : "text-slate-400 hover:text-white hover:bg-slate-700/50"
+                    }`}
+                  >
+                    <Target className="w-3.5 h-3.5" />
+                    <span>Hunter</span>
+                  </button>
                 </div>
               </div>
             </nav>
@@ -262,6 +278,7 @@ export default function App() {
                 <Route path="/market" element={<MarketContent />} />
                 <Route path="/black-market" element={<BlackMarketContent />} />
                 <Route path="/changelog" element={<Changelog />} />
+                <Route path="/hunter" element={<Hunter />} />
                 <Route path="/" element={<Navigate to="/items" replace />} />
               </Routes>
             </motion.div>
